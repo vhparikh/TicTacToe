@@ -3,7 +3,7 @@ package com.example.vp.tictactoe;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-//hi
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
