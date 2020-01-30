@@ -68,10 +68,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         //try to block
-        if (checkSingleBlank(O_MOVE)) {
+        if (checkSingleBlank(X_MOVE)) {
             return;
         }
         //play randomly
+    }
+
+    public void playRandom() {
+        //while()
+        int x = (int) Math.random();
+        int y = (int) Math.random();
+        //if()
+
     }
 
     public boolean checkSingleBlank(int player) {
@@ -97,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if(playerCount == 2 && blankCount == 1){
+                grid[blankX][blankY].setText("O");
                 board[blankX][blankY] = player;
                 return true;
             }
@@ -119,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if(playerCount == 2 && blankCount == 1){
+                grid[blankX][blankY].setText("O");
                 board[blankX][blankY] = player;
                 return true;
             }
@@ -154,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playerCount++;
         }
         if(playerCount == 2 && blankCount == 1){
+            grid[blankX][blankY].setText("O");
             board[blankX][blankY] = player;
             return true;
         }
@@ -189,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playerCount++;
         }
         if(playerCount == 2 && blankCount == 1){
+            grid[blankX][blankY].setText("O");
             board[blankX][blankY] = player;
             return true;
         }
