@@ -1,5 +1,11 @@
+/*
+    created by Vatsal Parikh
+    Date 1/31/2020
+    this is a tictactoe for android devices it is human vs computer
+ */
 package com.example.vp.tictactoe;
 
+//imports
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -12,6 +18,7 @@ import java.util.TooManyListenersException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //setting up grid
     Button[][] grid = new Button[3][3];
     int[][] board = new int[3][3];
     final int BLANK = 0;
@@ -24,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //setting each grid box to a button
         grid[0][0] = (Button)this.findViewById(R.id.button1);
         grid[0][1] = (Button)this.findViewById(R.id.button2);
         grid[0][2] = (Button)this.findViewById(R.id.button3);
@@ -34,12 +42,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         grid[2][1] = (Button)this.findViewById(R.id.button8);
         grid[2][2] = (Button)this.findViewById(R.id.button9);
 
+        //labeling the coordinates for each grid box
         for(int x = 0; x < 3; x++){
             for (int y = 0; y < 3; y++){
                 grid[x][y].setText(x + "," + y);
             }
         }
 
+        //checking to see which button was clicked
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 3; y++){
                 grid[x][y].setOnClickListener(this);
@@ -50,20 +60,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
          Button b = (Button)v;
+         //goes through grid if the button is empty will place X piece on the clicked button
          for (int x = 0; x < 3; x++){
              for (int y = 0; y < 3; y++){
-                 if(b.equals(grid[x][y])){
-                     if(board[x][y] == BLANK) {
+                 if(b.equals(grid[x][y])){ //if it found the button player clicked then:
+                     if(board[x][y] == BLANK) { //if the button clicked is empty then:
                          b.setText("X");
                          b.setEnabled(false);
                          board[x][y] = X_MOVE;
-                         if(checkWin(X_MOVE)){
+                         if(checkWin(X_MOVE)){ //if x won then:
                              Toast.makeText(this, "Player X won!", Toast.LENGTH_SHORT).show();
                              clearBoard();
-                         }else if(checkTie()){
+                         }else if(checkTie()){ //if the game was a tie then:
                              Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
                             clearBoard();
                          }
+                         //calls the aiMove method
                          aiMove();
                      }
                  }
@@ -75,23 +87,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void aiMove() {
         //try to win
         if(checkSingleBlank(O_MOVE)) {
-            if(checkWin(O_MOVE)){
+            if(checkWin(O_MOVE)){ //if O won then:
                 Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
-                clearBoard();
-            }else if(checkTie()){
+                clearBoard(); //reset the board
+            }else if(checkTie()){ //if the game was a tie then:
                 Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
-                clearBoard();
+                clearBoard(); //reset the board
             }
             return;
         }
         //try to block
         if (checkSingleBlank(X_MOVE)) {
-            if(checkWin(O_MOVE)){
+            if(checkWin(O_MOVE)){ //if O won then:
                 Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
-                clearBoard();
-            }else if(checkTie()){
+                clearBoard(); //reset the board
+            }else if(checkTie()){ //if the game was a tie then:
                 Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
-                clearBoard();
+                clearBoard(); //reset the board
             }
             return;
         }
@@ -99,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayList<Integer> list = new ArrayList<Integer>();
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 3; y++){
-                if(board[x][y] == BLANK){
+                if(board[x][y] == BLANK){ //if the box is empty then:
                     list.add(x*10+y);
                 }
             }
@@ -109,12 +121,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         grid[list.get(choice) / 10][list.get(choice) % 10].setText("O");
         grid[list.get(choice) / 10][list.get(choice) % 10].setEnabled(false);
 
-        if(checkWin(O_MOVE)){
+        if(checkWin(O_MOVE)){ //if O won then:
             Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
-            clearBoard();
-        }else if(checkTie()){
+            clearBoard(); //reset the board
+        }else if(checkTie()){ //if the game was a tie then:
             Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
-            clearBoard();
+            clearBoard(); //reset the board
         }
     }
 
