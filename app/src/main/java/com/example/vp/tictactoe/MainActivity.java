@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.TooManyListenersException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -53,7 +57,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                          b.setText("X");
                          b.setEnabled(false);
                          board[x][y] = X_MOVE;
-                         //check win
+                         if(checkWin(X_MOVE)){
+                             Toast.makeText(this, "Player X won!", Toast.LENGTH_SHORT).show();
+                             clearBoard();
+                         }else if(checkTie()){
+                             Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
+                            clearBoard();
+                         }
                          aiMove();
                      }
                  }
@@ -65,22 +75,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void aiMove() {
         //try to win
         if(checkSingleBlank(O_MOVE)) {
+            if(checkWin(O_MOVE)){
+                Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
+                clearBoard();
+            }else if(checkTie()){
+                Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
+                clearBoard();
+            }
             return;
         }
         //try to block
         if (checkSingleBlank(X_MOVE)) {
+            if(checkWin(O_MOVE)){
+                Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
+                clearBoard();
+            }else if(checkTie()){
+                Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
+                clearBoard();
+            }
             return;
         }
         //play randomly
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for(int x = 0; x < 3; x++){
+            for(int y = 0; y < 3; y++){
+                if(board[x][y] == BLANK){
+                    list.add(x*10+y);
+                }
+            }
+        }
+        int choice = (int)(Math.random() * list.size());
+        board[list.get(choice) / 10][list.get(choice) % 10] = O_MOVE;
+        grid[list.get(choice) / 10][list.get(choice) % 10].setText("O");
+        grid[list.get(choice) / 10][list.get(choice) % 10].setEnabled(false);
+
+        if(checkWin(O_MOVE)){
+            Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
+            clearBoard();
+        }else if(checkTie()){
+            Toast.makeText(this, "The game was a tie", Toast.LENGTH_SHORT).show();
+            clearBoard();
+        }
     }
 
-    public void playRandom() {
-        //while()
-        int x = (int) Math.random();
-        int y = (int) Math.random();
-        //if()
-
-    }
 
     public boolean checkSingleBlank(int player) {
         int playerCount = 0;
@@ -105,8 +142,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if(playerCount == 2 && blankCount == 1){
+                board[blankX][blankY] = O_MOVE;
                 grid[blankX][blankY].setText("O");
-                board[blankX][blankY] = player;
+                grid[blankX][blankY].setEnabled(false);
                 return true;
             }
         }
@@ -128,8 +166,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             if(playerCount == 2 && blankCount == 1){
+                board[blankX][blankY] = O_MOVE;
                 grid[blankX][blankY].setText("O");
-                board[blankX][blankY] = player;
+                grid[blankX][blankY].setEnabled(false);
                 return true;
             }
         }
@@ -164,8 +203,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playerCount++;
         }
         if(playerCount == 2 && blankCount == 1){
+            board[blankX][blankY] = O_MOVE;
             grid[blankX][blankY].setText("O");
-            board[blankX][blankY] = player;
+            grid[blankX][blankY].setEnabled(false);
             return true;
         }
 
@@ -200,13 +240,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             playerCount++;
         }
         if(playerCount == 2 && blankCount == 1){
+            board[blankX][blankY] = O_MOVE;
             grid[blankX][blankY].setText("O");
-            board[blankX][blankY] = player;
+            grid[blankX][blankY].setEnabled(false);
             return true;
         }
 
         return false;
 
+    }
+
+    //checks for a win by going through all possible wins
+    public boolean checkWin(int player) {
+        if(board[0][0] == player && board[0][1] == player && board[0][2] == player) {
+            return true;
+        }else if(board[1][0] == player && board[1][1] == player && board[1][2] == player) {
+            return true;
+        }else if(board[2][0] == player && board[2][1] == player && board[2][2] == player) {
+            return true;
+        }else if(board[0][0] == player && board[1][0] == player && board[2][0] == player) {
+            return true;
+        }else if(board[0][1] == player && board[1][1] == player && board[2][1] == player) {
+            return true;
+        }else if(board[0][2] == player && board[1][2] == player && board[2][2] == player) {
+            return true;
+        }else if(board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+            return true;
+        }else if(board[2][0] == player && board[1][1] == player && board[0][2] == player) {
+            return true;
+        }
+        return false;
+    }
+
+    //checks for a tie
+    public boolean checkTie() {
+
+        //looks for a filled up board
+        for (int row = 0; row < board.length; row++) {
+            for (int column = 0; column < board[0].length; column++) {
+                if(board[row][column] == BLANK) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //resets the gameboard
+    public void clearBoard() {
+
+        //clears every box on grid and re enables the button
+        for (int a = 0; a < board.length; a++) {
+            for (int b = 0; b < board[0].length; b++) {
+                board[a][b] = BLANK;
+                grid[a][b].setText(a+ "," +b);
+                grid[a][b].setEnabled(true);
+            }
+        }
     }
 
 }
