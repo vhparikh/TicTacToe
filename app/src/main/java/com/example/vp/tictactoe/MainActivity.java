@@ -112,14 +112,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for(int x = 0; x < 3; x++){
             for(int y = 0; y < 3; y++){
                 if(board[x][y] == BLANK){ //if the box is empty then:
-                    list.add(x*10+y);
+                    list.add(x*10+y); //add button to array list
                 }
             }
         }
-        int choice = (int)(Math.random() * list.size());
-        board[list.get(choice) / 10][list.get(choice) % 10] = O_MOVE;
-        grid[list.get(choice) / 10][list.get(choice) % 10].setText("O");
-        grid[list.get(choice) / 10][list.get(choice) % 10].setEnabled(false);
+        int choice = (int)(Math.random() * list.size()); //randomy picks a blank button
+        board[list.get(choice) / 10][list.get(choice) % 10] = O_MOVE; //sets button to O_MOVE
+        grid[list.get(choice) / 10][list.get(choice) % 10].setText("O"); //set button to O
+        grid[list.get(choice) / 10][list.get(choice) % 10].setEnabled(false); //disable grid button
 
         if(checkWin(O_MOVE)){ //if O won then:
             Toast.makeText(this, "Player O won!", Toast.LENGTH_SHORT).show();
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //looks for a filled up board
         for (int row = 0; row < board.length; row++) {
             for (int column = 0; column < board[0].length; column++) {
-                if(board[row][column] == BLANK) {
+                if(board[row][column] == BLANK) { //If button is blank then:
                     return false;
                 }
             }
